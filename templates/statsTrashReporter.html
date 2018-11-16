@@ -1,0 +1,23 @@
+{% extends 'layoutTrashReporter.html' %}
+
+{% block body %}
+{% for num in lista %}
+    <h1>Locations with trash: {{ num[0] }}</h1>
+{% endfor%}
+
+{% for num in lista2 %}
+    <h1>Latest point: {{ num[0] }}</h1>
+{% endfor%}
+
+{% for num in lista3 %}
+    <h1>Oldest point: {{ num[0] }}</h1>
+{% endfor%}
+
+    <h1>Range time of trash on the map: {{ lista4 }}</h1>
+
+
+{% for num in lista5 %}
+    <h1>Type of trash on the map: {{ num[0] }}. Amount of points on the map: {{ num[1] }}</h1>
+{% endfor%}
+
+{% endblock %}

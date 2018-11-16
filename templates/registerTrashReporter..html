@@ -1,0 +1,35 @@
+{% extends 'layoutTrashReporter.html' %}
+
+{% block body %}
+  <h1>Add Point</h1>
+  {% from "includes/_formhelpers.html" import render_field %}
+  
+
+  
+  
+    <form  action="" method="post" name="simple" enctype="multipart/form-data">
+  
+    <div class="form-group">
+      {{render_field(form.lat, class_="form-control")}}
+    </div>
+
+    <div class="form-group">
+      {{render_field(form.long, class_="form-control")}}
+    </div>
+    
+                <div class="form-group">
+                <p>Please put JPEG file</p>
+        <input type=file name=file>
+            </div>
+    
+ <div class="form-horizontal">
+    <h1>Choose Trash Type:</h1>
+   <div id="radios1" class="btn-group view-opt-btn-group" data-toggle="buttons-radio">
+   
+     <p><h4>{{ form.trashType}}</h4></p>
+
+</div>
+    </div>
+    <p><input type="submit" class="btn btn-primary" value="Submit"></p>
+  </form>
+{% endblock %}

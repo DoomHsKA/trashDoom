@@ -1,0 +1,109 @@
+{% extends 'layoutTrashReporter.html' %}
+
+
+
+
+
+{% block body %}
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Bing Maps</title>
+    <link rel="stylesheet" href="https://openlayers.org/en/v4.6.5/css/ol.css" type="text/css">
+    <!-- The line below is only needed for old environments like Internet Explorer and Android 4.x -->
+    <script src="https://cdn.polyfill.io/v2/polyfill.min.js?features=requestAnimationFrame,Element.prototype.classList,URL"></script>
+    <script src="https://openlayers.org/en/v4.6.5/build/ol.js"></script>
+    <script type="text/javascript" src="js/proj4.js"></script>
+  </head>
+  <body>
+     <a href="/addPoint" class="btn btn-primary btn-lg">Add Point</a>
+     <a href="/removePoint" class="btn btn-success btn-lg">Remove Point</a>
+     
+     <div id="map" class="map"></div>
+     <select id="layer-select">
+       <option value="Cadaster">Cadaster</option>
+       <option value="PNOA" selected>PNOA</option>
+       <option value="OSM">OSM</option>
+     </select>
+    <script>
+    
+    
+      var espainProjection = new ol.proj.Projection({
+          code: 'EPSG:4258',
+          // The extent is used to determine zoom level 0. Recommended values for a
+          // projection's validity extent can be found at https://epsg.io/.
+          extent: ol.proj.fromLonLat([-16.1, 32.88, 39.65, 84.17]),
+          units: 'm'
+      });
+      ol.proj.addProjection(espainProjection);
+      
+      var styles = [
+        'Cadastro',
+        'PNOA',
+        'OSM',
+      ];
+      var layers = [];
+      var source_catastro = new ol.source.TileWMS({
+          url: 'http://ovc.catastro.meh.es/Cartografia/WMS/ServidorWMS.aspx?',
+          params: {'LAYERS': 'Catastro', 'VERSION': '1.1.1', 'TILED': true,'TRANSPARENT':true,'FORMAT': 'image/png'} 
+          });
+      
+      layers.push(new ol.layer.Tile({
+            source: source_catastro,
+            name: 'Catastro',
+            description: 'Capa vectorial de CATASTRO',
+            visible: true
+       }));
+       
+      layers.push(new ol.layer.Tile({
+            source: new ol.source.TileWMS(({
+                url: "http://www.idee.es/wms/PNOA/PNOA?",
+                params: {"LAYERS": "PNOA", "TILED": "true", "TYPE": 'base'},
+            })),
+            title: "Foto aérea (PNOA)"
+       }));  
+      
+      URL_WMS_OSM='http://upvusig.car.upv.es:8080/geoserver/wms?';
+      layers.push(new ol.layer.Tile({
+          source: new ol.source.TileWMS(({
+                url: URL_WMS_OSM,
+                params: {"LAYERS": "osm:all", "TILED": "true", "TYPE": 'base'},
+          })),
+          title: "Open Street Map"
+        }));
+      
+      var map = new ol.Map({
+        layers: layers,
+        projection: espainProjection,
+
+        // Improve user experience by loading tiles while dragging/zooming. Will make
+        // zooming choppy on mobile or slow devices.
+        loadTilesWhileInteracting: true,
+        target: 'map',
+        controls: ol.control.defaults({
+            attributionOptions: {
+              collapsible: false
+            }
+          }),
+        view: new ol.View({
+            center: ol.proj.fromLonLat([-5.41, 40.82]),
+            zoom: 5
+        })
+      });
+
+      var select = document.getElementById('layer-select');
+      function onChange() {
+        var style = select.value;
+        for (var i = 0, ii = layers.length; i < ii; ++i) {
+          layers[i].setVisible(styles[i] === style);
+        }
+      }
+      select.addEventListener('change', onChange);
+      onChange();
+      
+    </script>
+  </body>
+</html>
+
+
+{% endblock %}
