@@ -1,0 +1,11 @@
+$ git clone https://github.com/DoomHsKA/trashDoom
+#download the project 
+$git add fileName
+#add file in doawnload project
+$git commit -m "this is commit"
+$git remote -v
+# remote the ver
+$git push https://github.com/DoomHsKA/trashDoom
+#send your file into project
+
+
